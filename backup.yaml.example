@@ -1,0 +1,6 @@
+account: <github bot account>
+org: <organisation to backup>
+folder: <location to backup to>
+token: <bot OAuth token>
+admin-token: <"owner" account OAuth token>
+repos: <file to store/get repos list from>
