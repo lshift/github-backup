@@ -47,17 +47,20 @@ for repo in repos:
 	(stdoutdata, stderrdata) = popen.communicate()
 	badlines = []
 	errlines = [x for x in stderrdata.split("\n") if x != ""]
+	fourOhFoursAllowed = 0 # We allow some due to hooks fun
+	fourOhFour = "API request returned HTTP 404: Not Found"
 	for line in stdoutdata.split("\n"):
 		for g in goodlines:
 			if g.search(line) != None:
 				break
 		else:
-			if line == "Unable to read hooks, skipping" and errlines == ["API request returned HTTP 404: Not Found"]:
+			if line == "Unable to read hooks, skipping" and errlines == [fourOhFour]:
 				# Anything else we don't know, but this is acceptable
+				fourOhFoursAllowed = 1
 				pass
 			else:
 				badlines.append(line)
-	if badlines != [] or stdoutdata.strip() == "":
+	if badlines != [] or stdoutdata.strip() == "" or errlines != ([fourOhFour] * fourOhFoursAllowed):
 		for line in badlines:
 			print "Bad line '%s'" % line
 		print "\nOutput:\n"
