@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 if len(sys.argv) > 1:
 	repos = sys.argv[1:]
 else:
-	repos = [x.strip() for x in open(config["repos"]).readlines()]
+	repos = [x.strip() for x in open(path.join(config["folder"], config["repos"])).readlines()]
 logging.info("Repos to backup: %s", ", ".join(repos))
 cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {folder} -t {token} --private -R {repo}"
 
