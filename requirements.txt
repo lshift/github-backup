@@ -5,4 +5,5 @@
 #    pip-compile requirements.in
 #
 github-backup==0.8.0
+pygithub==1.26.0
 PyYAML==3.11

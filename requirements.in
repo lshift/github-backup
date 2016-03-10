@@ -1,5 +1,6 @@
 PyYAML>=3.11
 github-backup>=0.8.0
+pygithub
 
 # Useful for recompiling this
 # pip-tools>=1.6
