@@ -18,7 +18,7 @@ else:
 logging.info("Repos to backup: %s", ", ".join(repos))
 cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {folder} -t {token} --private -R {repo}"
 
-if not path.exists(path.join(config["folder"], "ssh-git.sh")):
+if not path.exists(path.join(path.dirname(path.realpath(__file__)), "ssh-git.sh")):
 	raise Exception, "Can't find %s" % path.join(config["folder"],"ssh-git.sh")
 
 if not path.exists(path.join(config["folder"], config["account"])):
