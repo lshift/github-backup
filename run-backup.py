@@ -27,7 +27,8 @@ if not path.exists(path.join(config["folder"], config["account"])):
 env = os.environ.copy()
 env["GIT_SSH"] = path.abspath("{folder}/ssh-git.sh".format(**config))
 env["PKEY"] = path.abspath("{folder}/{account}".format(**config))
-del env["SSH_AUTH_SOCK"]
+if "SSH_AUTH_SOCK" in env:
+	del env["SSH_AUTH_SOCK"]
 
 goodlines = [
 	"Backing up user ",
