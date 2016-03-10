@@ -5,17 +5,21 @@ import os
 import re
 import sys
 import logging
+from datetime import datetime
 
 config = yaml.load(open("backup.yaml"))
 logging.basicConfig(
 	level=logging.getLevelName(config["logging"]),
 	format='%(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
+
+with open(path.join(config["folder"], config["repos"])) as reposFile:
+	repos = yaml.load(reposFile.read())
+
 if len(sys.argv) > 1:
-	repos = sys.argv[1:]
-else:
-	repos = [x.strip() for x in open(path.join(config["folder"], config["repos"])).readlines()]
-logging.info("Repos to backup: %s", ", ".join(repos))
+	repos = {k: v for k, v in repos.iteritems() if k in sys.argv[1:]}
+
+logging.info("Repos to backup: %s", ", ".join(sorted(repos, key=str.lower)))
 cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {folder} -t {token} --private -R {repo}"
 
 if not path.exists(path.join(path.dirname(path.realpath(__file__)), "ssh-git.sh")):
@@ -43,7 +47,14 @@ goodlines = [
 goodlines = [re.compile(x) for x in goodlines]
 
 allok = True
-for repo in repos:
+for repo in sorted(repos, key=str.lower):
+	repo_folder = path.join(config["folder"], "repositories", repo)
+	if path.exists(repo_folder):
+		last_time = datetime.fromtimestamp(os.path.getmtime(repo_folder))
+		if last_time > repos[repo]["last_event"]:
+			logger.info("Skipping %s due to it being already up to date (%s < %s)", repo, repos[repo]["last_event"], last_time)
+			continue
+
 	logger.info("Backing up %s" % repo)
 	torun = cmd.format(repo=repo, **config)
 	logger.debug("Backup command %s", torun)
