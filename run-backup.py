@@ -4,12 +4,18 @@ import os.path as path
 import os
 import re
 import sys
+import logging
 
 config = yaml.load(open("backup.yaml"))
+logging.basicConfig(
+	level=logging.getLevelName(config["logging"]),
+	format='%(asctime)s %(levelname)s: %(message)s')
+logger = logging.getLogger(__name__)
 if len(sys.argv) > 1:
 	repos = sys.argv[1:]
 else:
 	repos = [x.strip() for x in open(config["repos"]).readlines()]
+logging.info("Repos to backup: %s", ", ".join(repos))
 cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {folder} -t {token} --private -R {repo}"
 
 if not path.exists(path.join(config["folder"], "ssh-git.sh")):
@@ -35,9 +41,11 @@ goodlines = [
 	]
 goodlines = [re.compile(x) for x in goodlines]
 
+allok = True
 for repo in repos:
+	logger.info("Backing up %s" % repo)
 	torun = cmd.format(repo=repo, **config)
-	print "Backing up %s" % repo
+	logger.debug("Backup command %s", torun)
 	popen = subprocess.Popen(
 		torun,
 		shell=True, # to use PATH
@@ -61,12 +69,13 @@ for repo in repos:
 			else:
 				badlines.append(line)
 	if badlines != [] or stdoutdata.strip() == "" or errlines != ([fourOhFour] * fourOhFoursAllowed):
+		logger.error("Backup failure for %s", repo)
 		for line in badlines:
-			print "Bad line '%s'" % line
-		print "\nOutput:\n"
-		print stdoutdata
-		print stderrdata
-		sys.exit(-1)
+			logger.warning("Bad line '%s'" % line)
+		logger.warning("Stdout: %s", stdoutdata)
+		logger.warning("Stderr: %s", stderrdata)
+		allok = False
 	else:
-		print "Backed up %s ok" % repo
-	break
+		logger.info("Backed up %s ok", repo)
+if not allok:
+	sys.exit(-1)
