@@ -4,9 +4,5 @@
 #
 #    pip-compile requirements.in
 #
-click==6.3                # via pip-tools
-first==2.0.1              # via pip-tools
 github-backup==0.8.0
-pip-tools==1.6
 PyYAML==3.11
-six==1.10.0               # via pip-tools
