@@ -3,7 +3,7 @@ import yaml
 
 config = yaml.load(open("backup.yaml"))
 
-g = github.Github(login_or_token=config["token"])
+g = github.Github(login_or_token=config["admin-token"])
 
 repos = [repo.name for repo in g.get_organization(config["org"]).get_repos()]
 with open(config["repos"], "w") as reposfile:
