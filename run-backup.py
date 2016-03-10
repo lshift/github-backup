@@ -6,7 +6,10 @@ import re
 import sys
 
 config = yaml.load(open("backup.yaml"))
-repos = [x.strip() for x in open(config["repos"]).readlines()]
+if len(sys.argv) > 1:
+	repos = sys.argv[1:]
+else:
+	repos = [x.strip() for x in open(config["repos"]).readlines()]
 cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {folder} -t {token} --private -R {repo}"
 
 if not path.exists(path.join(config["folder"], "ssh-git.sh")):
