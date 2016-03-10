@@ -24,6 +24,7 @@ goodlines = [
 	"(?:Retrieving|Filtering|Backing up) repositories",
 	"Retrieving [^ ]+ (?:issues|pull requests|milestones|labels|hooks)",
 	"(?:Saving|Writing) \d+ (?:issues|pull requests|milestones|labels|hooks) to disk",
+	"Cloning [^ ]+ repository from git@github.com:[^ ]+.git to /", # more path after the /
 	"Updating [^ ]+ in /", # more path after the /
 	"Skipping [^ ]+ \(git@github\.com:.+?\.wiki\.git\) since it's not initalized", # allowed to not have wikis
 	"^$"
