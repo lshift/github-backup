@@ -48,7 +48,7 @@ goodlines = [re.compile(x) for x in goodlines]
 
 allok = True
 for repo in sorted(repos, key=str.lower):
-	repo_folder = path.join(config["folder"], "repositories", repo)
+	repo_folder = path.join(config["folder"], "repositories", repo, "repository", ".git") # .git folder always gets updated
 	if path.exists(repo_folder):
 		last_time = datetime.fromtimestamp(os.path.getmtime(repo_folder))
 		if last_time > repos[repo]["last_event"]:
