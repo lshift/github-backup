@@ -39,7 +39,8 @@ for repo in org.get_repos():
 			existing = existing[0]
 			new_perm = max_permission([adding.what, existing.what])
 			if new_perm != existing.what:
-				raise Exception, (existing, adding)
+				access.remove(existing)
+				access.append(adding)
 		elif len(existing) == 0:
 			access.append(adding)
 		else:
