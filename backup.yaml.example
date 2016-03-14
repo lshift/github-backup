@@ -5,3 +5,6 @@ token: <bot OAuth token>
 admin-token: <"owner" account OAuth token>
 repos: <file to store/get repos list from>
 logging: <one of INFO/DEBUG/WARNING>
+email_from: <someone@somewhere.com>
+email_to: <recipient@foo.com>
+smtp_server: <unauthenticated SMTP server>
