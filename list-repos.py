@@ -3,8 +3,14 @@ import yaml
 import os.path as path
 from datetime import datetime, timedelta
 import collections
+import logging
 
 config = yaml.load(open("backup.yaml"))
+logging.basicConfig(
+	level=logging.getLevelName(config["logging"]),
+	format='%(asctime)s %(levelname)s: %(message)s')
+logging.getLogger("github").setLevel(logging.INFO) # Don't give extra debug!
+logger = logging.getLogger(__name__)
 
 g = github.Github(login_or_token=config["admin-token"])
 
@@ -30,7 +36,7 @@ def max_permission(perms):
 		raise Exception, perms
 
 for repo in org.get_repos():
-	print "repo", repo.name
+	logging.info("repo %s", repo.name)
 	repos[repo.name] = {}
 	access = []
 	def new_access(adding):
