@@ -65,7 +65,7 @@ else:
 	text = "No changes"
 
 msg['From'] = config["email_from"]
-msg['To'] = config["email_to"]
+msg['To'] = ", ".join(config["email_to"])
 changes = MIMEText(text, "plain")
 msg.attach(changes)
 
