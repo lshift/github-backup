@@ -78,5 +78,5 @@ for repo in org.get_repos():
 
 repos["_when"] = datetime.now() # Record when we generated this
 
-with open(path.join(config["folder"], config["repos"]), "w") as reposfile:
+with open(path.join(config["backup_folder"], config["repos"]), "w") as reposfile:
 	reposfile.write(yaml.safe_dump(repos))

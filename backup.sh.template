@@ -1,0 +1,10 @@
+#!/bin/bash
+set -o pipefail
+set -eu
+cd {{ code_folder }}
+if [ -f {{ repos }} ]; then
+    mv {{ repos }} {{ repos }}.old
+fi
+python list-repos.py
+python compare-permissions.py
+python run-backup.py

@@ -13,7 +13,7 @@ logging.basicConfig(
 	format='%(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
-yaml_path = path.join(config["folder"], config["repos"])
+yaml_path = path.join(config["backup_folder"], config["repos"])
 if not path.exists(yaml_path):
 	raise Exception, "Can't find %s. Did you run list-repos.py first?" % yaml_path
 current_repos = yaml.load(open(yaml_path))

@@ -13,7 +13,7 @@ logging.basicConfig(
 	format='%(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
-with open(path.join(config["folder"], config["repos"])) as reposFile:
+with open(path.join(config["backup_folder"], config["repos"])) as reposFile:
 	repos = yaml.load(reposFile.read())
 
 if len(sys.argv) > 1:
@@ -23,10 +23,10 @@ logging.info("Repos to backup: %s", ", ".join(sorted(repos, key=str.lower)))
 cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {folder} -t {token} --private -R {repo}"
 
 if not path.exists(path.join(path.dirname(path.realpath(__file__)), "ssh-git.sh")):
-	raise Exception, "Can't find %s" % path.join(config["folder"],"ssh-git.sh")
+	raise Exception, "Can't find %s" % path.join(config["backup_folder"],"ssh-git.sh")
 
-if not path.exists(path.join(config["folder"], config["account"])):
-	raise Exception, "Can't find %s" % path.join(config["folder"], config["account"])
+if not path.exists(path.join(config["backup_folder"], config["account"])):
+	raise Exception, "Can't find %s" % path.join(config["backup_folder"], config["account"])
 
 env = os.environ.copy()
 env["GIT_SSH"] = path.abspath("{folder}/ssh-git.sh".format(**config))
@@ -48,7 +48,7 @@ goodlines = [re.compile(x) for x in goodlines]
 
 allok = True
 for repo in sorted(repos, key=str.lower):
-	repo_folder = path.join(config["folder"], "repositories", repo, "repository", ".git") # .git folder always gets updated
+	repo_folder = path.join(config["backup_folder"], "repositories", repo, "repository", ".git") # .git folder always gets updated
 	if path.exists(repo_folder):
 		last_time = datetime.fromtimestamp(os.path.getmtime(repo_folder))
 		if last_time > repos[repo]["last_event"]:
