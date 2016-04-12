@@ -2,8 +2,8 @@
 set -o pipefail
 set -eu
 cd {{ code_folder }}
-if [ -f {{ repos }} ]; then
-    mv {{ repos }} {{ repos }}.old
+if [ -f {{ repos_fullpath }} ]; then
+    mv {{ repos_fullpath }} {{ repos_fullpath }}.old
 fi
 python list-repos.py
 python compare-permissions.py
