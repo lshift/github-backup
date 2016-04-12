@@ -20,7 +20,7 @@ if len(sys.argv) > 1:
 	repos = {k: v for k, v in repos.iteritems() if k in sys.argv[1:]}
 
 logging.info("Repos to backup: %s", ", ".join(sorted(repos, key=str.lower)))
-cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {folder} -t {token} --private -R {repo}"
+cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pull-comments --pull-commits --labels --hooks --milestones --repositories --wikis -O --fork --prefer-ssh -o {backup_folder} -t {token} --private -R {repo}"
 
 if not path.exists(path.join(path.dirname(path.realpath(__file__)), "ssh-git.sh")):
 	raise Exception, "Can't find %s" % path.join(config["backup_folder"],"ssh-git.sh")
@@ -29,8 +29,8 @@ if not path.exists(path.join(config["backup_folder"], config["account"])):
 	raise Exception, "Can't find %s" % path.join(config["backup_folder"], config["account"])
 
 env = os.environ.copy()
-env["GIT_SSH"] = path.abspath("{folder}/ssh-git.sh".format(**config))
-env["PKEY"] = path.abspath("{folder}/{account}".format(**config))
+env["GIT_SSH"] = path.abspath("{backup_folder}/ssh-git.sh".format(**config))
+env["PKEY"] = path.abspath("{backup_folder}/{account}".format(**config))
 if "SSH_AUTH_SOCK" in env:
 	del env["SSH_AUTH_SOCK"]
 
