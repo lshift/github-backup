@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-github-backup==0.8.0
+github-backup==0.9.0
 Jinja2==2.8
 MarkupSafe==0.23          # via jinja2
 pygithub==1.26.0
