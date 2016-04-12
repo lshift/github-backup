@@ -35,7 +35,7 @@ if path.exists(yaml_path + ".old"): # Otherwise, changes is empty
 			continue
 		logging.debug("Checking %s", r)
 		repo = makePermsDict(current_repos[r])
-		old_repo = makePermsDict(previous_repos[r])
+		old_repo = makePermsDict(previous_repos[r]) if r in previous_repos else {}
 		for k in repo:
 			user = repo[k]
 			if k not in old_repo:
