@@ -29,7 +29,7 @@ if not path.exists(path.join(config["backup_folder"], config["account"])):
 	raise Exception, "Can't find %s" % path.join(config["backup_folder"], config["account"])
 
 env = os.environ.copy()
-env["GIT_SSH"] = path.abspath("{backup_folder}/ssh-git.sh".format(**config))
+env["GIT_SSH"] = path.abspath("{code_folder}/ssh-git.sh".format(**config))
 env["PKEY"] = path.abspath("{backup_folder}/{account}".format(**config))
 if "SSH_AUTH_SOCK" in env:
 	del env["SSH_AUTH_SOCK"]
