@@ -48,6 +48,8 @@ goodlines = [re.compile(x) for x in goodlines]
 
 allok = True
 for repo in sorted(repos, key=str.lower):
+	if repo == "_when": # Not a real repository
+		continue
 	repo_folder = path.join(config["backup_folder"], "repositories", repo, "repository", ".git") # .git folder always gets updated
 	if path.exists(repo_folder):
 		last_time = datetime.fromtimestamp(os.path.getmtime(repo_folder))
