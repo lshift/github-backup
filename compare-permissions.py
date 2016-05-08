@@ -16,12 +16,13 @@ logger = logging.getLogger(__name__)
 yaml_path = path.join(config["backup_folder"], config["repos"])
 if not path.exists(yaml_path):
 	raise Exception, "Can't find %s. Did you run list-repos.py first?" % yaml_path
-current_repos = yaml.load(open(yaml_path))
+current_repos = yaml.load(open(yaml_path))["repos"]
 
 changes = []
 
 if path.exists(yaml_path + ".old"): # Otherwise, changes is empty
-	previous_repos = yaml.load(open(yaml_path + ".old"))
+	data = yaml.load(open(yaml_path + ".old"))
+	previous_repos = data["repos"]
 
 	def makePermsDict(repo):
 		return {x["who"]: (x["what"],x["why"]) for x in repo["access"]}
@@ -31,8 +32,6 @@ if path.exists(yaml_path + ".old"): # Otherwise, changes is empty
 		logging.warning(msg)
 
 	for r in current_repos:
-		if r == "_when": # Magic entry that has info on when this was recorded
-			continue
 		logging.debug("Checking %s", r)
 		repo = makePermsDict(current_repos[r])
 		old_repo = makePermsDict(previous_repos[r]) if r in previous_repos else {}
@@ -53,7 +52,7 @@ if path.exists(yaml_path + ".old"): # Otherwise, changes is empty
 msg = MIMEMultipart()
 when = datetime.datetime.now().strftime("%Y-%m-%d")
 if changes != []:
-	when = previous_repos["_when"]
+	when = data["when"]
 	new_path = yaml_path + when.strftime("-%Y-%m-%dT%H:%M:%S%z")
 	logging.warning("Writing to %s because of changes", new_path)
 	with open(new_path, "w") as new_file:

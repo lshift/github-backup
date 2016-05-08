@@ -76,7 +76,9 @@ for repo in org.get_repos():
 		when = oldest_when.replace() # Can't do copy, but replace works!
 	repos[repo.name]["last_event"] = when
 
-repos["_when"] = datetime.now() # Record when we generated this
-
 with open(path.join(config["backup_folder"], config["repos"]), "w") as reposfile:
-	reposfile.write(yaml.safe_dump(repos))
+	data = {
+		"when": datetime.now(),# Record when we generated this
+		"repos": repos
+	}
+	reposfile.write(yaml.safe_dump(data))
