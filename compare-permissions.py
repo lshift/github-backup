@@ -20,7 +20,8 @@ current_repos = yaml.load(open(yaml_path))["repos"]
 
 changes = []
 
-if path.exists(yaml_path + ".old"): # Otherwise, changes is empty
+old_permissions_exists = path.exists(yaml_path + ".old")
+if old_permissions_exists: # Otherwise, changes is empty
 	data = yaml.load(open(yaml_path + ".old"))
 	previous_repos = data["repos"]
 
@@ -62,6 +63,8 @@ if changes != []:
 else:
 	msg['Subject'] = 'Github permission list for %s' % when
 	text = "No changes"
+	if not old_permissions_exists:
+		text += "\n\nCannot find %s. This is an error if you're not running this for the first time." % (path.abspath(yaml_path + ".old"))
 
 msg['From'] = config["email_from"]
 msg['To'] = ", ".join(config["email_to"])
