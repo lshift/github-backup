@@ -2,9 +2,9 @@ account: <github bot account>
 org: <organisation to backup>
 backup_folder: <location to backup to>
 code_folder: <location the scripts/config are in>
-token: <bot OAuth token>
-admin-token: <"owner" account OAuth token>
-repos: <file to store/get repos list from>
+token: <bot OAuth token. Needs to be in the "read everything" team, and have at least "repo" scope>
+admin-token: <"owner" account OAuth token. Needs "repo" and "read:org" scopes>
+repos: <file to store/get repos list from. 'repos.yaml' is a reasonable default>
 logging: <one of INFO/DEBUG/WARNING>
 email_from: <someone@somewhere.com>
 email_to:
