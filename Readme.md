@@ -24,6 +24,7 @@ After that, we can use a token from a more restricted user (with "repo" scope) t
 
 Configuration
 ------------
+0. Run `pip install -r requirements.txt`
 1. Copy `backup.yaml.example` to `backup.yaml` and edit appropriately. The paths are partially required because we assume the script is likely to be run from Cron, and they reduce the likelihood of things going wrong...
 2. Make a file called whatever you set `account` to in `backup.yaml` containing an SSH private key of the `account` account and put it in `backup_folder`
 3. Run `generate.py`
