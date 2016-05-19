@@ -25,6 +25,10 @@ admins = []
 for member in org.get_members(role="admin"):
 	admins.append(member.login)
 
+members = []
+for member in org.get_members():
+	members.append(member.login)
+
 def max_permission(perms):
 	if "admin" in perms:
 		return "admin"
@@ -63,6 +67,9 @@ for repo in org.get_repos():
 		perms = collaborator._rawData['permissions']
 		perms = max_permission({k: v for k,v in perms.items() if v}.keys())
 		new_access(Access(collaborator.login, "Collaborator", perms))
+
+	for member in members:
+		new_access(Access(member, "[Organisation member]", config["default-access"]))
 
 	if not repo.private:
 		new_access(Access("Everyone", "[Public access]", "pull"))
