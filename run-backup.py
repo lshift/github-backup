@@ -25,12 +25,13 @@ cmd = "github-backup {org} --issues --issue-comments --issue-events --pulls --pu
 if not path.exists(path.join(path.dirname(path.realpath(__file__)), "ssh-git.sh")):
 	raise Exception, "Can't find %s" % path.join(config["backup_folder"],"ssh-git.sh")
 
-if not path.exists(path.join(config["backup_folder"], config["account"])):
-	raise Exception, "Can't find %s" % path.join(config["backup_folder"], config["account"])
+pkey = path.abspath("{backup_folder}/{account}".format(**config))
+if not path.exists(pkey):
+	raise Exception, "Can't find %s" % pkey
 
 env = os.environ.copy()
 env["GIT_SSH"] = path.abspath("{code_folder}/ssh-git.sh".format(**config))
-env["PKEY"] = path.abspath("{backup_folder}/{account}".format(**config))
+env["PKEY"] = pkey
 if "SSH_AUTH_SOCK" in env:
 	del env["SSH_AUTH_SOCK"]
 
