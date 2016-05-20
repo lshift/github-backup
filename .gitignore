@@ -3,3 +3,4 @@ ENV/
 backup.yaml
 backup.sh
 dump
+*.pyc

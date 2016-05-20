@@ -7,12 +7,19 @@ import sys
 import logging
 from datetime import datetime
 import stat
+from smtpHandler import BufferingSMTPHandler
 
 config = yaml.load(open("backup.yaml"))
-logging.basicConfig(
-	level=logging.getLevelName(config["logging"]),
-	format='%(asctime)s %(levelname)s: %(message)s')
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger()
+logger.setLevel(logging.getLevelName(config["logging"]))
+
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+smtpHandler = BufferingSMTPHandler(config["smtp_server"], config["email_from"], config["email_to"], "ERROR in Github backup", 10000)
+logger.addHandler(smtpHandler)
 
 with open(path.join(config["backup_folder"], config["repos"])) as reposFile:
 	repos = yaml.load(reposFile.read())["repos"]
@@ -103,5 +110,9 @@ for repo in sorted(repos, key=str.lower):
 		allok = False
 	else:
 		logger.info("Backed up %s ok", repo)
+
 if not allok:
+	smtpHandler.flush()
 	sys.exit(-1)
+else:
+	smtpHandler.clear()
