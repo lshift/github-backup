@@ -6,6 +6,7 @@ import re
 import sys
 import logging
 from datetime import datetime
+import stat
 
 config = yaml.load(open("backup.yaml"))
 logging.basicConfig(
@@ -28,6 +29,9 @@ if not path.exists(path.join(path.dirname(path.realpath(__file__)), "ssh-git.sh"
 pkey = path.abspath("{backup_folder}/{account}".format(**config))
 if not path.exists(pkey):
 	raise Exception, "Can't find %s" % pkey
+mode = stat.S_IMODE(os.stat(pkey).st_mode)
+if mode != 0600:
+	raise Exception, "%s must be in file mode 600, or SSH doesn't accept it. It's in %s"%(pkey, oct(mode)[1:])
 
 env = os.environ.copy()
 env["GIT_SSH"] = path.abspath("{code_folder}/ssh-git.sh".format(**config))
