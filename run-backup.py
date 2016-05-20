@@ -47,6 +47,8 @@ goodlines = [
 	"Cloning [^ ]+ repository from git@github.com:[^ ]+.git to /", # more path after the /
 	"Updating [^ ]+ in /", # more path after the /
 	"Skipping [^ ]+ \(git@github\.com:.+?\.wiki\.git\) since it's not initalized", # allowed to not have wikis
+	"Exceeded rate limit of \d+ requests; waiting \d+ seconds to reset",
+	"No more requests remaining",
 	"^$"
 	]
 goodlines = [re.compile(x) for x in goodlines]
@@ -71,7 +73,14 @@ for repo in sorted(repos, key=str.lower):
 		stdout=subprocess.PIPE)
 	(stdoutdata, stderrdata) = popen.communicate()
 	badlines = []
-	errlines = [x for x in stderrdata.split("\n") if x != ""]
+	uncheckedErrlines = [x for x in stderrdata.split("\n") if x != ""]
+	errlines = []
+	for line in uncheckedErrlines:
+		for g in goodlines:
+			if g.search(line) != None:
+				break
+		else:
+			errlines.append(line)
 	fourOhFoursAllowed = 0 # We allow some due to hooks fun
 	fourOhFour = "API request returned HTTP 404: Not Found"
 	for line in stdoutdata.split("\n"):
