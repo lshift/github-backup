@@ -53,8 +53,7 @@ if old_permissions_exists: # Otherwise, changes is empty
 msg = MIMEMultipart()
 when = datetime.datetime.now().strftime("%Y-%m-%d")
 if changes != []:
-	when = data["when"]
-	new_path = yaml_path + when.strftime("-%Y-%m-%dT%H:%M:%S%z")
+	new_path = yaml_path + data["when"].strftime("-%Y-%m-%dT%H:%M:%S%z")
 	logging.warning("Writing to %s because of changes", new_path)
 	with open(new_path, "w") as new_file:
 		yaml.dump(previous_repos, new_file)
