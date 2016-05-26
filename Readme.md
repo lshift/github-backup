@@ -1,6 +1,8 @@
 Scrutiny
 ========
 
+[![Build Status](https://travis-ci.org/lshift/scrutiny.svg?branch=master)](https://travis-ci.org/lshift/scrutiny)
+
 Scrutiny is a tool for permissions audit and backup of Github repositories for an organisation. It uses [github-backup](https://github.com/josegonzalez/python-github-backup) for the underlying backup, but enhances it to check that all the repositories that should be backed up are, and adds it's own auditing process.
 
 It's based upon [LShift's](http://www.lshift.net/) requirements for a backup and audit tool, but should be usable for other organisations.
