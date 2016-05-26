@@ -86,6 +86,7 @@ for repo in org.get_repos():
 with open(path.join(config["backup_folder"], config["repos"]), "w") as reposfile:
 	data = {
 		"when": datetime.now(),# Record when we generated this
-		"repos": repos
+		"repos": repos,
+		"members": members
 	}
 	reposfile.write(yaml.safe_dump(data))
