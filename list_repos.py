@@ -29,6 +29,8 @@ def runLists(config):
 	for member in org.get_members():
 		members.append(member.login)
 
+	teams = {}
+
 	def max_permission(perms):
 		if "admin" in perms:
 			return "admin"
@@ -38,6 +40,10 @@ def runLists(config):
 			return "pull"
 		else:
 			raise Exception, perms
+
+	def max_permission_from_response(resp):
+		perms = resp._rawData['permissions']
+		return max_permission({k: v for k,v in perms.items() if v}.keys())
 
 	for repo in org.get_repos():
 		logging.info("repo %s", repo.name)
@@ -49,9 +55,11 @@ def runLists(config):
 				existing = existing[0]
 				new_perm = max_permission([adding.what, existing.what])
 				if new_perm != existing.what:
+					logging.debug("Replaced %s for %s in favour of %s for %s - %s", existing.what, existing.who, adding.what, adding.who, adding.why)
 					access.remove(existing)
 					access.append(adding)
 			elif len(existing) == 0:
+				logging.debug("Adding %s because of %s with %s", adding.who, adding.why, adding.what)
 				access.append(adding)
 			else:
 				raise Exception, existing
@@ -60,12 +68,17 @@ def runLists(config):
 			new_access(Access(admin, "[Owner]", "admin"))
 
 		for team in repo.get_teams():
+			if team.name not in teams:
+				team_repos = team.get_repos()
+				teams[team.name] = {}
+				for tr in team_repos:
+					teams[team.name][tr.name] = max_permission_from_response(tr)
+			logging.debug("team %s has access to %s with %s", team.name, repo.name, teams[team.name][repo.name])
 			for user in team.get_members():
-				new_access(Access(user.login, team.name, team.permission))
+				new_access(Access(user.login, team.name, teams[team.name][repo.name]))
 
 		for collaborator in repo.get_collaborators():
-			perms = collaborator._rawData['permissions']
-			perms = max_permission({k: v for k,v in perms.items() if v}.keys())
+			perms = max_permission_from_response(collaborator)
 			new_access(Access(collaborator.login, "Collaborator", perms))
 
 		for member in members:
