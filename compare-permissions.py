@@ -20,9 +20,10 @@ current_repos = yaml.load(open(yaml_path))["repos"]
 
 changes = []
 
-old_permissions_exists = path.exists(yaml_path + ".old")
-if old_permissions_exists: # Otherwise, changes is empty
-	data = yaml.load(open(yaml_path + ".old"))
+old_yaml_path = yaml_path + ".old"
+old_permissions_exists = path.exists(old_yaml_path)
+data = yaml.load(open(old_yaml_path)) if old_permissions_exists else None
+if data != None: # both an existing permissions and a usable file
 	previous_repos = data["repos"]
 
 	def makePermsDict(repo):
