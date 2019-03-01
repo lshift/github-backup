@@ -103,8 +103,11 @@ def runLists(config):
 	}
 	return data
 
+def load_config(fname):
+	return yaml.safe_load(open(fname))
+
 if __name__ == "__main__":
-	config = yaml.load(open("backup.yaml"))
+	config = load_config("backup.yaml")
 	with open(path.join(config["backup_folder"], config["repos"]), "w") as reposfile:
 		data = runLists(config)
 		reposfile.write(yaml.safe_dump(data))
