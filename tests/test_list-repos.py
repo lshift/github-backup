@@ -1,5 +1,4 @@
-from .list_repos import runLists
-
+from ..list_repos import runLists
 from .testFramework import TestCase
 
 class TestListRepos(TestCase):
