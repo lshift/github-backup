@@ -3,6 +3,6 @@ set -o pipefail
 set -eu
 cd {{ code_folder }}
 python list_repos.py
-python compare-permissions.py
+python compare_permissions.py
 python run-backup.py
 mv {{ repos_fullpath }} {{ repos_fullpath }}.old
