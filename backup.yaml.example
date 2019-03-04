@@ -10,4 +10,3 @@ email_from: <someone@somewhere.com>
 email_to:
   - <recipient@foo.com>
 smtp_server: <unauthenticated SMTP server>
-default-access: <One of pull/push/admin. Whatever the default setting is from https://github.com/organizations/YOUR_ORGANISATION/settings/member_privileges as we can't read it from the API>
