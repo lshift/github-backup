@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 #
+# pylint: skip-file
+#
 # Copyright 2001-2002 by Vinay Sajip. All Rights Reserved.
 #
 # Permission to use, copy, modify, and distribute this software and its
