@@ -8,7 +8,6 @@ class TestListRepos(TestCase):
             "logging": "DEBUG",
             "admin-token": self.test_admin_token,
             "org": self.test_org,
-            "default-access": "pull"
         }
         runLists(config)
 

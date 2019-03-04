@@ -82,7 +82,7 @@ def runLists(config):
 			new_access(Access(collaborator.login, "Collaborator", perms))
 
 		for member in members:
-			new_access(Access(member, "[Organisation member]", config["default-access"]))
+			new_access(Access(member, "[Organisation member]", org.raw_data["default_repository_permission"]))
 
 		if not repo.private:
 			new_access(Access("Everyone", "[Public access]", "pull"))
