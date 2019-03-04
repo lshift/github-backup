@@ -5,6 +5,8 @@ Jinja2
 
 # tests
 pytest
+pytest-watch
+prospector
 
 # Useful for recompiling this
 pip-tools>=1.6

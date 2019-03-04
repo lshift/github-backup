@@ -20,13 +20,12 @@ def max_permission(perms):
 		raise Exception, perms
 
 def max_permission_from_response(resp):
-	perms = resp._rawData['permissions']
+	perms = resp._rawData['permissions'] # pylint: disable=protected-access
 	return max_permission({k: v for k,v in perms.items() if v}.keys())
 
-def parseRepo(repo, admins, teams, members, org):
+def parseRepo(repo, admins, teams, members, org): # pylint: disable=too-many-locals
 	result = {}
 	access = []
-	oldest_when = datetime.now() - timedelta(days=90) # Github doesn't return events more than 90 days ago, so assume repos with that timestamp had something just before then https://developer.github.com/v3/activity/events/
 
 	def new_access(adding):
 		existing = [x for x in access if x.who == adding.who]
@@ -37,7 +36,7 @@ def parseRepo(repo, admins, teams, members, org):
 				logging.debug("Replaced %s for %s in favour of %s for %s - %s", existing.what, existing.who, adding.what, adding.who, adding.why)
 				access.remove(existing)
 				access.append(adding)
-		elif len(existing) == 0:
+		elif not existing: # empty list
 			logging.debug("Adding %s because of %s with %s", adding.who, adding.why, adding.what)
 			access.append(adding)
 		else:
@@ -48,9 +47,8 @@ def parseRepo(repo, admins, teams, members, org):
 
 	for team in repo.get_teams():
 		if team.name not in teams:
-			team_repos = team.get_repos()
 			teams[team.name] = {}
-			for tr in team_repos:
+			for tr in team.get_repos():
 				teams[team.name][tr.name] = max_permission_from_response(tr)
 		logging.debug("team %s has access to %s with %s", team.name, repo.name, teams[team.name][repo.name])
 		for user in team.get_members():
@@ -69,18 +67,20 @@ def parseRepo(repo, admins, teams, members, org):
 	result["access"] = [dict(x._asdict()) for x in access]
 
 	events = list(repo.get_events().get_page(0))
-	if len(events) > 0:
+	if events: # empty list is false
 		when = events[0].created_at
 	else:
-		when = oldest_when.replace() # Can't do copy, but replace works!
+		# Github doesn't return events more than 90 days ago, so assume repos with
+		# that timestamp had something just before then https://developer.github.com/v3/activity/events/
+		when = datetime.now() - timedelta(days=90)
 	result["last_event"] = when
+	return result
 
 def runLists(config):
 	logging.basicConfig(
 		level=logging.getLevelName(config["logging"]),
 		format='%(asctime)s %(levelname)s: %(message)s')
 	logging.getLogger("github").setLevel(logging.INFO) # Don't give extra debug!
-	logger = logging.getLogger(__name__)
 
 	g = github.Github(login_or_token=config["admin-token"])
 
@@ -109,8 +109,10 @@ def runLists(config):
 	}
 	return data
 
+
 def load_config(fname):
 	return yaml.safe_load(open(fname))
+
 
 if __name__ == "__main__":
 	config = load_config("backup.yaml")

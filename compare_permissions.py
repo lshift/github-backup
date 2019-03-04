@@ -37,6 +37,7 @@ def gen_changes(current_repos, previous_repos):
 
 	return [changes[k] for k in sorted(changes.iterkeys())]
 
+
 if __name__ == "__main__":
 	config = yaml.load(open("backup.yaml"))
 	logging.basicConfig(
@@ -52,7 +53,7 @@ if __name__ == "__main__":
 	old_yaml_path = yaml_path + ".old"
 	old_permissions_exists = path.exists(old_yaml_path)
 	data = yaml.load(open(old_yaml_path)) if old_permissions_exists else None
-	if data != None: # both an existing permissions and a usable file
+	if data is not None: # both an existing permissions and a usable file
 		previous_repos = data["repos"]
 		changes = gen_changes(current_repos, previous_repos)
 	else:
