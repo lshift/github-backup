@@ -1,6 +1,6 @@
 pyyaml>=4.2b1 # to avoid https://nvd.nist.gov/vuln/detail/CVE-2017-18342
 github-backup>=0.8.0
-pygithub
+pygithub==1.26.0 # because https://github.com/PyGithub/PyGithub/pull/1031 breaks our test work and other related problems
 Jinja2
 
 # tests
