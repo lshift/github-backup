@@ -10,3 +10,6 @@ prospector
 
 # Useful for recompiling this
 pip-tools>=1.6
+
+# Python 2.x lockdowns to avoid dependabot upgrades to Python 3.x
+astroid < 2 # As needed by pylint et al
